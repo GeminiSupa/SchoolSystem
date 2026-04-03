@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+}
+
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
+
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Global Fixes for Button Hover Typography Contrast */
+@layer components {
+  button.hover\:bg-slate-50:hover, 
+  button.hover\:bg-slate-100:hover, 
+  button.hover\:bg-white:hover,
+  a.hover\:bg-slate-50:hover,
+  a.hover\:bg-slate-100:hover,
+  a.hover\:bg-white:hover {
+    color: #0f172a !important; /* Force text to slate-900 to ensure readability on light backgrounds */
+  }
+  
+  button.hover\:bg-slate-900:hover, 
+  button.hover\:bg-slate-800:hover,
+  button.group-hover\:bg-slate-900:hover,
+  a.hover\:bg-slate-900:hover,
+  a.hover\:bg-slate-800:hover {
+    color: #ffffff !important; /* Force text to white to ensure readability on dark backgrounds */
+  }
+
+  /* Specifically target cases where a dark parent changes background, but inner text keeps slate color */
+  .group:hover p.group-hover\:text-slate-300,
+  .group:hover span.group-hover\:text-slate-300 {
+    color: #cbd5e1 !important;
+  }
+}
