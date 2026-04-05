@@ -111,6 +111,32 @@ CREATE TABLE IF NOT EXISTS invoices (
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'paid', 'overdue', 'cancelled')),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+CREATE TABLE IF NOT EXISTS assignments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  school_id UUID REFERENCES schools(id),
+  class_id UUID REFERENCES classes(id),
+  teacher_id UUID REFERENCES profiles(id),
+  title TEXT NOT NULL,
+  description TEXT,
+  subject TEXT,
+  due_date TIMESTAMP WITH TIME ZONE,
+  max_points NUMERIC DEFAULT 100,
+  status TEXT DEFAULT 'published' CHECK (status IN ('draft', 'published', 'archived')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS assignment_submissions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  assignment_id UUID REFERENCES assignments(id) ON DELETE CASCADE,
+  student_id UUID REFERENCES students(id) ON DELETE CASCADE,
+  content TEXT,
+  grade NUMERIC,
+  feedback TEXT,
+  status TEXT DEFAULT 'submitted' CHECK (status IN ('submitted', 'graded', 'returned')),
+  submitted_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(assignment_id, student_id)
+);
 ```
 
 ### Storage Setup

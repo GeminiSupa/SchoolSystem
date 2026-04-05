@@ -133,7 +133,7 @@ export default function AssignmentsPage() {
       const { data: { user } } = await supabase.auth.getUser()
       const { data: profile } = await supabase.from('profiles').select('school_id').eq('id', user?.id).single()
 
-      const { max_points, status, subject, ...dataToInsert } = formData;
+      const { max_points, subject, ...dataToInsert } = formData;
       const { error } = await supabase
         .from('assignments')
         .insert({
