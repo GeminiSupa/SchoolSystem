@@ -38,9 +38,9 @@ export async function POST(request: Request) {
         full_name,
         email,
         role: role || 'teacher',
-        phone,
-        dob,
-        address,
+        phone: phone || null,
+        dob: dob || null,
+        address: address || null,
         school_id
       })
 

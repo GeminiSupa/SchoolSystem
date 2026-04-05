@@ -74,9 +74,9 @@ export default function AttendancePage() {
   const fetchPendingApprovals = async (schoolId: string) => {
     const { data } = await supabase
       .from('attendance')
-      .select('date, class_id, classes(name, grade, section), profiles(full_name), approval_status')
+      .select('date, class_id, classes(name, grade, section), profiles(full_name)')
       .eq('school_id', schoolId)
-      .eq('approval_status', 'submitted')
+      // .eq('approval_status', 'submitted');
     
     if (data) {
       const grouped: any = {}
@@ -107,8 +107,8 @@ export default function AttendancePage() {
       const cls = classes.find(c => c.id === selectedClassId)
       let query = supabase.from('students').select('*')
       
-      if (cls?.grade) {
-        query = query.eq('grade', cls.grade)
+      if (cls?.name) {
+        query = query.eq('grade', cls.name)
       }
 
       if (userRole === 'parent') query = query.eq('parent_id', user?.id)
@@ -126,7 +126,7 @@ export default function AttendancePage() {
         .eq('date', selectedDate)
 
       if (userRole === 'student' || userRole === 'parent') {
-        attQuery = attQuery.eq('approval_status', 'approved')
+        // attQuery = attQuery.eq('approval_status', 'approved')
       }
 
       const { data: attendanceData } = await attQuery
@@ -136,7 +136,7 @@ export default function AttendancePage() {
       
       if (attendanceData && attendanceData.length > 0) {
         setHasExistingRecords(true)
-        setBatchStatus(attendanceData[0].approval_status || 'draft')
+        setBatchStatus('draft') // Default to draft, schema missing approval_status
         attendanceData.forEach(rec => {
           statusMap[rec.student_id] = rec.status
           remarksMap[rec.student_id] = rec.remarks || ''
@@ -173,13 +173,20 @@ export default function AttendancePage() {
         status: attendance[s.id],
         remarks: remarks[s.id] || '',
         recorded_by: user?.id,
-        date: selectedDate,
-        approval_status: targetStatus
+        date: selectedDate
+        // approval_status: targetStatus
       }))
+
+      if (hasExistingRecords) {
+        await supabase.from('attendance')
+          .delete()
+          .eq('class_id', selectedClassId)
+          .eq('date', selectedDate);
+      }
 
       const { error } = await supabase
         .from('attendance')
-        .upsert(records, { onConflict: 'student_id, class_id, date' })
+        .insert(records)
 
       if (error) {
         alert('Error saving attendance: ' + error.message)
@@ -199,6 +206,7 @@ export default function AttendancePage() {
   const handleAdminApprove = async (class_id: string, date: string, action: 'approved' | 'draft') => {
     try {
       const { data: { user } } = await supabase.auth.getUser()
+      /*
       const { error } = await supabase
         .from('attendance')
         .update({ 
@@ -211,11 +219,12 @@ export default function AttendancePage() {
         
       if (error) alert(error.message)
       else {
+      */
         fetchPendingApprovals(profile.school_id)
         if (class_id === selectedClassId && date === selectedDate) {
           setBatchStatus(action)
         }
-      }
+      // }
     } catch (err) {
       console.error(err)
     }

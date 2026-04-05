@@ -121,10 +121,10 @@ export default function UserManagementPage() {
         .update({
           full_name: editingUser.full_name,
           role: editingUser.role,
-          phone: editingUser.phone,
-          address: editingUser.address,
-          dob: editingUser.dob,
-          department: editingUser.department,
+          phone: editingUser.phone || null,
+          address: editingUser.address || null,
+          dob: editingUser.dob || null,
+          department: editingUser.department || null,
           avatar_url: editingUser.avatar_url
         })
         .eq('id', editingUser.id)

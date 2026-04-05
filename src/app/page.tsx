@@ -43,11 +43,11 @@ export default function LandingPage() {
               Simplify administrative tasks, improve communication, and ensure data security with our unified school management complex. Focus on quality education while we automate the rest.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Link href="/register" className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-all group">
+              <Link href="/register" className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 hover:shadow-2xl hover:shadow-slate-200 transition-all group">
                 Get Started Now
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>
-              <a href="https://wa.link/souve5" target="_blank" rel="noopener noreferrer" className="px-8 py-4 glassmorphism rounded-2xl font-bold text-slate-900 hover:bg-slate-50 transition-all text-center">
+              <a href="https://wa.link/souve5" target="_blank" rel="noopener noreferrer" className="px-8 py-4 glassmorphism rounded-2xl font-bold text-slate-900 hover:bg-slate-900 hover:text-white transition-all text-center shadow-sm hover:shadow-xl">
                 Request a Demo
               </a>
             </div>

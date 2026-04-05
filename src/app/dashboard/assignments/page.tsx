@@ -55,14 +55,14 @@ export default function AssignmentsPage() {
         if (classData?.length) setFormData(prev => ({ ...prev, class_id: classData[0].id }))
       } else if (profileData?.role === 'teacher') {
         const { data: teacherSubjects } = await supabase
-          .from('class_subjects')
-          .select('subject_name, class_id, classes(name)')
+          .from('timetable')
+          .select('subject, class_id, classes(name)')
           .eq('teacher_id', user.id)
         
         const mappedClasses = (teacherSubjects || []).map((ts: any) => ({
           id: ts.class_id,
-          name: `${ts.classes?.name || 'Class'} - ${ts.subject_name}`,
-          subject_name: ts.subject_name
+          name: `${ts.classes?.name || 'Class'} - ${ts.subject}`,
+          subject_name: ts.subject
         }))
         
         setClasses(mappedClasses)
@@ -133,13 +133,13 @@ export default function AssignmentsPage() {
       const { data: { user } } = await supabase.auth.getUser()
       const { data: profile } = await supabase.from('profiles').select('school_id').eq('id', user?.id).single()
 
+      const { max_points, status, subject, ...dataToInsert } = formData;
       const { error } = await supabase
         .from('assignments')
         .insert({
-          ...formData,
+          ...dataToInsert,
           school_id: profile?.school_id,
-          teacher_id: user?.id,
-          status: 'published'
+          teacher_id: user?.id
         })
 
       if (error) {
