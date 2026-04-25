@@ -7,6 +7,8 @@ import {
   CheckCircle2, Clock, User, TrendingUp,
   Receipt, Wallet, AlertCircle
 } from 'lucide-react'
+import { downloadCSV } from '@/lib/utils/export'
+import { generatePayslipPDF } from '@/lib/utils/pdf-gen'
 
 export default function PayrollPage() {
   const [payroll, setPayroll] = useState<any[]>([])
@@ -99,14 +101,22 @@ export default function PayrollPage() {
           <p className="text-slate-500 font-bold text-sm">Managing disbursements for {currentMonth}</p>
         </div>
         {profile?.role === 'admin' && (
-          <button 
-            onClick={handleRunPayroll}
-            disabled={isGenerating}
-            className="w-full md:w-auto bg-slate-900 text-white px-8 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 disabled:opacity-50"
-          >
-            {isGenerating ? <Loader2 className="animate-spin" size={18} /> : <Play size={18} className="fill-current" />}
-            Generate {currentMonth} Payroll
-          </button>
+          <div className="flex gap-4 w-full md:w-auto">
+            <button 
+              onClick={() => downloadCSV(payroll, `payroll_export_${currentMonth.replace(' ', '_')}`)}
+              className="bg-white text-slate-900 border border-slate-200 px-6 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-50 transition-all"
+            >
+              <Download size={18} /> Export
+            </button>
+            <button 
+              onClick={handleRunPayroll}
+              disabled={isGenerating}
+              className="bg-slate-900 text-white px-8 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 disabled:opacity-50"
+            >
+              {isGenerating ? <Loader2 className="animate-spin" size={18} /> : <Play size={18} className="fill-current" />}
+              Generate {currentMonth} Payroll
+            </button>
+          </div>
         )}
       </div>
 
@@ -201,7 +211,10 @@ export default function PayrollPage() {
                             Mark Paid
                          </button>
                        )}
-                       <button className="p-2 bg-white border border-slate-100 rounded-xl text-slate-400 hover:text-slate-900 hover:shadow-sm transition-all">
+                       <button 
+                        onClick={() => generatePayslipPDF(entry)}
+                        className="p-2 bg-white border border-slate-100 rounded-xl text-slate-400 hover:text-slate-900 hover:shadow-sm transition-all"
+                       >
                           <Download size={16} />
                        </button>
                     </div>

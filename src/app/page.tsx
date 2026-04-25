@@ -1,6 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CheckCircle2, Users, Calendar, CreditCard, ClipboardCheck, GraduationCap, ArrowRight, ShieldCheck, Zap } from "lucide-react";
+import { 
+  CheckCircle2, Users, Calendar, CreditCard, ClipboardCheck, 
+  GraduationCap, ArrowRight, ShieldCheck, Zap, Sparkles, 
+  AlertCircle, TrendingUp, Clock, Wand2, Loader2 
+} from "lucide-react";
 
 export default function LandingPage() {
   return (
@@ -8,10 +12,15 @@ export default function LandingPage() {
       {/* Navbar */}
       <nav className="fixed top-0 w-full z-50 glassmorphism border-b border-slate-100 px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <div className="w-9 h-9 md:w-10 md:h-10 bg-slate-900 rounded-xl flex items-center justify-center">
-            <span className="text-white font-display font-bold text-lg md:text-xl">P</span>
-          </div>
-          <span className="text-xl md:text-2xl font-display font-bold tracking-tight">POS</span>
+          <Link href="/" className="flex items-center gap-2">
+            <Image 
+              src="/logo.png" 
+              alt="AIM HIGH Logo" 
+              width={180} 
+              height={50} 
+              className="h-10 w-auto md:h-12 object-contain"
+            />
+          </Link>
         </div>
         <div className="flex items-center gap-2 md:gap-4">
           <Link href="/login" className="md:hidden text-[10px] uppercase tracking-widest font-bold text-slate-900 border border-slate-200 px-3 py-2 rounded-xl bg-white/50">
@@ -80,7 +89,91 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Features Grid */}
+      {/* Intelligence Section */}
+      <section className="py-24 px-6 overflow-hidden relative">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto space-y-16 relative z-10">
+          <div className="flex flex-col lg:flex-row gap-12 items-center">
+            <div className="lg:w-1/2 space-y-8">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-sm font-extrabold border border-indigo-100 uppercase tracking-widest">
+                <Sparkles size={14} />
+                <span>Next-Gen Intelligence</span>
+              </div>
+              <h2 className="text-4xl lg:text-5xl font-display font-bold text-slate-900 leading-tight">
+                Harness the Power of <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Educational AI</span>
+              </h2>
+              <p className="text-slate-500 text-lg leading-relaxed">
+                Beyond simple management, AIM HIGH uses advanced AI to provide predictive insights and personalized communication, helping you stay ahead of student needs.
+              </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {[
+                  { title: "Predictive Risk Analysis", desc: "Identify students at risk of falling behind before it happens.", icon: <AlertCircle className="text-rose-500" /> },
+                  { title: "AI Daily Reports", desc: "Automated, encouraging progress summaries for parents.", icon: <CheckCircle2 className="text-emerald-500" /> },
+                  { title: "Academic Sentiment", desc: "Deep analysis of student academic trajectory and growth.", icon: <TrendingUp className="text-indigo-500" /> },
+                  { title: "Smart Reminders", desc: "Polite, AI-crafted fee reminders that prioritize relationships.", icon: <Clock className="text-amber-500" /> }
+                ].map((item, i) => (
+                  <div key={i} className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100 shadow-sm">
+                        {item.icon}
+                      </div>
+                      <h4 className="font-bold text-slate-900">{item.title}</h4>
+                    </div>
+                    <p className="text-sm text-slate-500 leading-relaxed pl-11">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="lg:w-1/2 relative">
+               <div className="glassmorphism p-4 rounded-[40px] border border-white/50 shadow-2xl relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-indigo-500 to-transparent animate-shimmer" />
+                  <div className="bg-slate-900 rounded-[32px] p-8 space-y-6">
+                    <div className="flex items-center justify-between border-b border-white/10 pb-6">
+                       <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-2xl bg-indigo-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/40">
+                             <Wand2 size={24} />
+                          </div>
+                          <div>
+                             <p className="text-xs font-extrabold text-indigo-400 uppercase tracking-widest">AI Intelligence</p>
+                             <h4 className="text-white font-bold">Analysis Running...</h4>
+                          </div>
+                       </div>
+                       <Loader2 className="animate-spin text-white/20" />
+                    </div>
+                    
+                    <div className="space-y-4">
+                       <div className="p-4 bg-white/5 rounded-2xl border border-white/10 space-y-2">
+                          <div className="flex justify-between items-center">
+                             <div className="h-2 w-24 bg-white/20 rounded-full overflow-hidden">
+                                <div className="h-full w-3/4 bg-indigo-500" />
+                             </div>
+                             <span className="text-[10px] font-bold text-indigo-400 uppercase">94% Growth</span>
+                          </div>
+                          <p className="text-sm text-slate-300 italic leading-relaxed">
+                            "Student demonstrates exceptional analytical growth in STEM. Strong candidate for early advanced placement."
+                          </p>
+                       </div>
+                       
+                       <div className="p-4 bg-white/5 rounded-2xl border border-white/10 flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-500 border border-rose-500/30">
+                             <AlertCircle size={20} />
+                          </div>
+                          <div className="flex-1">
+                             <p className="text-xs font-bold text-white uppercase tracking-widest">Risk Alert</p>
+                             <p className="text-xs text-slate-400">Attendance drop detected in Section B</p>
+                          </div>
+                       </div>
+                    </div>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <section id="features" className="py-24 px-6 bg-slate-50">
         <div className="max-w-7xl mx-auto space-y-16">
           <div className="text-center max-w-3xl mx-auto space-y-4">
@@ -206,13 +299,16 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="space-y-6">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
-                <span className="text-white font-display font-bold text-sm">P</span>
-              </div>
-              <span className="text-xl font-display font-bold text-slate-900">POS</span>
+              <Image 
+                src="/logo.png" 
+                alt="AIM HIGH Logo" 
+                width={120} 
+                height={40} 
+                className="h-10 w-auto object-contain grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all"
+              />
             </div>
             <p className="text-slate-500 text-sm leading-relaxed">
-              Pakistan's most trusted School ERP — built by <a href="https://ux4u.online" target="_blank" rel="noopener noreferrer" className="text-indigo-600 font-semibold hover:underline">UX4U</a> for Pakistani institutions.
+              Pakistan's most trusted School ERP — built by <a href="https://ux4u.online" target="_blank" rel="noopener noreferrer" className="text-indigo-600 font-semibold hover:underline">UX4U</a> for AIM HIGH.
             </p>
             <a href="https://ux4u.online" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-slate-700 transition-colors">
               A UX4U Initiative ↗
@@ -251,7 +347,7 @@ export default function LandingPage() {
           ))}
         </div>
         <div className="max-w-7xl mx-auto pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-slate-500">© 2026 POS School Management ERP — A <a href="https://ux4u.online" target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">UX4U</a> Product. All rights reserved.</p>
+          <p className="text-xs text-slate-500">© 2026 AIM HIGH School Management System — A <a href="https://ux4u.online" target="_blank" rel="noopener noreferrer" className="text-indigo-500 hover:underline">UX4U</a> Product. All rights reserved.</p>
           <p className="text-xs text-slate-400">🇵🇰 Made in Pakistan, for Pakistan</p>
         </div>
       </footer>

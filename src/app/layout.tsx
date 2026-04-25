@@ -6,13 +6,13 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "POS - Modern School Management",
-  description: "Next-generation multi-tenant school management system.",
+  title: "AIM HIGH - School Management System",
+  description: "Next-generation professional school management system.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "EduOS",
+    title: "AIM HIGH",
   },
 };
 

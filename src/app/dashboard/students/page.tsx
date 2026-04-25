@@ -5,9 +5,11 @@ import { createClient } from '@/lib/supabase/client'
 import { 
   Plus, Search, Users, BookOpen, MoreVertical, 
   GraduationCap, X, Loader2, User, CheckCircle2, AlertCircle,
-  Filter, Download, Trash2, Edit, ExternalLink, Camera
+  Filter, Download, Trash2, Edit, ExternalLink, Camera, Wand2,
+  Sparkles, TrendingUp, Info
 } from 'lucide-react'
 import { FileUpload } from '@/components/ui/file-upload'
+import { downloadCSV } from '@/lib/utils/export'
 
 export default function StudentsPage() {
   const [students, setStudents] = useState<any[]>([])
@@ -31,12 +33,32 @@ export default function StudentsPage() {
     parent_id: '',
   })
   const [editingStudent, setEditingStudent] = useState<any>(null)
+  const [riskAlerts, setRiskAlerts] = useState<any[]>([])
+  const [isAnalyzingRisk, setIsAnalyzingRisk] = useState(false)
   
   const supabase = createClient()
 
   useEffect(() => {
     fetchStudents()
   }, [])
+
+  const handleAnalyzeRisk = async () => {
+    if (students.length === 0) return
+    setIsAnalyzingRisk(true)
+    try {
+      const res = await fetch('/api/ai/analyze-risk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ students: students.slice(0, 10) }) // Analyze first 10 for demo
+      })
+      const data = await res.json()
+      setRiskAlerts(data.alerts || [])
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsAnalyzingRisk(false)
+    }
+  }
 
   const fetchStudents = async () => {
     setIsLoading(true)
@@ -208,7 +230,18 @@ export default function StudentsPage() {
           <p className="text-slate-500 font-medium">Browse student profiles, academic progress, and digital portfolios.</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
-          <button className="flex-1 md:flex-none glassmorphism px-6 py-3 rounded-2xl font-bold text-slate-900 flex items-center justify-center gap-2 hover:bg-white transition-all border border-slate-200">
+          <button 
+            onClick={handleAnalyzeRisk}
+            disabled={isAnalyzingRisk || students.length === 0}
+            className="flex-1 md:flex-none bg-indigo-500 text-white px-6 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-600 transition-all shadow-lg shadow-indigo-200 disabled:opacity-50"
+          >
+            {isAnalyzingRisk ? <Loader2 size={18} className="animate-spin" /> : <Wand2 size={18} />}
+            {isAnalyzingRisk ? 'Analyzing...' : 'AI Risk Analysis'}
+          </button>
+          <button 
+            onClick={() => downloadCSV(students, 'student_list')}
+            className="flex-1 md:flex-none glassmorphism px-6 py-3 rounded-2xl font-bold text-slate-900 flex items-center justify-center gap-2 hover:bg-white transition-all border border-slate-200"
+          >
             <Download size={18} /> Export
           </button>
           {userRole === 'admin' && (
@@ -221,6 +254,52 @@ export default function StudentsPage() {
           )}
         </div>
       </div>
+
+       {/* AI Risk Alerts Section */}
+       {riskAlerts.length > 0 && (
+         <div className="space-y-6 animate-in slide-in-from-top duration-500">
+            <div className="flex items-center justify-between">
+               <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center text-rose-500 border border-rose-100">
+                     <AlertCircle size={20} />
+                  </div>
+                  <div>
+                     <h2 className="text-xl font-bold text-slate-900">AI Predictive Alerts</h2>
+                     <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Early Intervention Required</p>
+                  </div>
+               </div>
+               <button onClick={() => setRiskAlerts([])} className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors">Dismiss All</button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+               {riskAlerts.map((alert, i) => (
+                  <div key={i} className="glassmorphism p-6 rounded-3xl border-l-4 border-l-rose-500 space-y-4 hover:shadow-xl transition-all">
+                     <div className="flex justify-between items-start">
+                        <div className="flex items-center gap-3">
+                           <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 font-bold border border-slate-200">
+                              {alert.name?.charAt(0)}
+                           </div>
+                           <div>
+                              <p className="font-bold text-slate-900">{alert.name}</p>
+                              <span className={`inline-block px-2 py-0.5 rounded-full text-[8px] font-extrabold uppercase tracking-widest border ${
+                                 alert.riskLevel === 'High' ? 'bg-rose-50 text-rose-600 border-rose-100' : 'bg-amber-50 text-amber-600 border-amber-100'
+                              }`}>
+                                 {alert.riskLevel} Risk
+                              </span>
+                           </div>
+                        </div>
+                        <Info size={14} className="text-slate-300" />
+                     </div>
+                     <p className="text-xs text-slate-500 leading-relaxed font-bold">"{alert.reason || alert.riskLevel}"</p>
+                     <div className="flex gap-2">
+                        <button className="flex-1 py-3 bg-slate-900 text-white rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all">Contact Parent</button>
+                        <button className="flex-1 py-3 bg-slate-50 text-slate-600 rounded-xl text-[10px] font-bold uppercase tracking-widest border border-slate-100 hover:bg-white transition-all">Plan Review</button>
+                     </div>
+                  </div>
+               ))}
+            </div>
+         </div>
+       )}
 
       <div className="grid grid-cols-1 md:flex items-center gap-4">
         <div className="relative flex-1">

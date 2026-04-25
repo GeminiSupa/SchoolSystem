@@ -110,9 +110,12 @@ export default function DashboardLayout({
     <div className="flex h-screen bg-slate-50 font-sans">
       {/* Sidebar (Desktop) */}
       <aside className="w-64 glassmorphism border-r border-slate-200 m-3 rounded-3xl p-6 hidden md:flex flex-col overflow-y-auto custom-scrollbar">
-        <div className="flex items-center gap-3 mb-10 px-2">
-          <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white font-display font-bold text-xl tracking-tighter">S</div>
-          <span className="font-display font-extrabold text-2xl tracking-tighter">EduOS</span>
+        <div className="flex items-center gap-3 mb-10 px-2 justify-center">
+          <img 
+            src="/logo.png" 
+            alt="AIM HIGH Logo" 
+            className="h-16 w-auto object-contain"
+          />
         </div>
         
         <nav className="space-y-1 flex-1">

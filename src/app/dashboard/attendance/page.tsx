@@ -5,8 +5,9 @@ import { createClient } from '@/lib/supabase/client'
 import { 
   Check, X, Clock, Search, Filter, Loader2, Save, 
   Calendar as CalendarIcon, ChevronLeft, ChevronRight,
-  AlertCircle, CheckCircle2, FileText, Send
+  AlertCircle, CheckCircle2, FileText, Send, Download
 } from 'lucide-react'
+import { downloadCSV } from '@/lib/utils/export'
 
 export default function AttendancePage() {
   const [activeTab, setActiveTab] = useState<'mark' | 'approvals'>('mark')
@@ -253,6 +254,23 @@ export default function AttendancePage() {
                 Approvals {pendingApprovals.length > 0 && <span className="bg-rose-500 text-white text-[10px] px-2 py-0.5 rounded-full">{pendingApprovals.length}</span>}
              </button>
           </div>
+        )}
+        {(userRole === 'teacher' || userRole === 'admin') && activeTab === 'mark' && (
+           <button 
+             onClick={() => {
+               const exportData = students.map(s => ({
+                 Name: s.full_name,
+                 Roll_No: s.roll_no,
+                 Status: attendance[s.id] || 'Not Marked',
+                 Date: selectedDate,
+                 Remarks: remarks[s.id] || ''
+               }))
+               downloadCSV(exportData, `attendance_${selectedDate}`)
+             }}
+             className="px-6 py-3 glassmorphism rounded-2xl font-bold flex items-center justify-center gap-2 border border-slate-200 hover:bg-white transition-all text-slate-700"
+           >
+              <Download size={18} /> Export
+           </button>
         )}
       </div>
 

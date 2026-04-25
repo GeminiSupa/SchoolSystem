@@ -170,7 +170,7 @@ export default function SubmissionsPage({ params }: { params: Promise<{ id: stri
             <tbody className="divide-y divide-slate-100">
               {students.length > 0 ? students.map((student) => {
                 const sub = submissions[student.id]
-                const isSubmitted = sub && sub.status !== 'returned' && sub.content
+                const isSubmitted = sub && sub.status !== 'returned' && (sub.content || sub.attachment_url)
                 
                 return (
                   <tr key={student.id} className="hover:bg-white/40 transition-colors group">
@@ -187,12 +187,24 @@ export default function SubmissionsPage({ params }: { params: Promise<{ id: stri
                     </td>
                     <td className="px-8 py-5">
                       {isSubmitted ? (
-                        <div className="flex flex-col items-start gap-1">
+                        <div className="flex flex-col items-start gap-2">
                           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-extrabold uppercase tracking-widest border border-emerald-100">
                             <CheckCircle2 size={12} /> Received
                           </span>
+                          {sub.attachment_url && (
+                            <a 
+                              href={sub.attachment_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-xl text-[10px] font-bold hover:bg-indigo-100 transition-all border border-indigo-100 max-w-[160px]"
+                            >
+                               <FileText size={12} />
+                               <span className="truncate">{sub.attachment_name || 'View Work'}</span>
+                               <Download size={10} />
+                            </a>
+                          )}
                           {sub.content && (
-                            <div className="text-xs text-slate-500 font-medium truncate max-w-[150px] italic">"{sub.content}"</div>
+                            <div className="text-[10px] text-slate-500 font-medium truncate max-w-[150px] italic">"{sub.content}"</div>
                           )}
                         </div>
                       ) : (

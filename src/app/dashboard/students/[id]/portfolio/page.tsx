@@ -6,7 +6,7 @@ import { FileUpload } from '@/components/ui/file-upload'
 import Link from 'next/link'
 import { 
   Loader2, Plus, Trash2, Camera, Trophy, Star, 
-  FileText, Wand2, Sparkles, X, Share2, Clipboard 
+  FileText, Wand2, Sparkles, X, Share2, Clipboard, TrendingUp
 } from 'lucide-react'
 
 export default function StudentPortfolioPage({ params }: { params: { id: string } }) {
@@ -16,6 +16,8 @@ export default function StudentPortfolioPage({ params }: { params: { id: string 
   const [isGeneratingAI, setIsGeneratingAI] = useState(false)
   const [aiReport, setAiReport] = useState<string | null>(null)
   const [showAIModal, setShowAIModal] = useState(false)
+  const [trajectory, setTrajectory] = useState<string | null>(null)
+  const [isAnalyzingTrajectory, setIsAnalyzingTrajectory] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -27,7 +29,11 @@ export default function StudentPortfolioPage({ params }: { params: { id: string 
         .single()
 
       if (sError) console.error(sError)
-      else setStudent(studentData)
+      else {
+        setStudent(studentData)
+        // Auto-analyze trajectory if not already done
+        analyzeAcademicTrajectory(studentData.full_name)
+      }
 
       // Fetch sample portfolios from storage/table
       // For now we use the student record's avatar and some mock data
@@ -36,6 +42,30 @@ export default function StudentPortfolioPage({ params }: { params: { id: string 
 
     fetchStudentData()
   }, [params.id])
+
+  const analyzeAcademicTrajectory = async (name: string) => {
+    setIsAnalyzingTrajectory(true)
+    try {
+      // Mock some grades for analysis
+      const mockGrades = [
+        { subject: 'Math', marks: 85 },
+        { subject: 'Science', marks: 92 },
+        { subject: 'English', marks: 78 }
+      ]
+      
+      const res = await fetch('/api/ai/academic-sentiment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentName: name, grades: mockGrades })
+      })
+      const data = await res.json()
+      setTrajectory(data.trajectory)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsAnalyzingTrajectory(false)
+    }
+  }
 
   const handleUpdateAvatar = async (url: string) => {
     await supabase
@@ -114,6 +144,34 @@ export default function StudentPortfolioPage({ params }: { params: { id: string 
             </button>
           </div>
         </div>
+        </div>
+
+        {/* AI Trajectory Insights */}
+        {(trajectory || isAnalyzingTrajectory) && (
+          <div className="mx-6 md:mx-12 mt-6 p-6 rounded-[2rem] bg-gradient-to-br from-indigo-50/50 to-purple-50/50 border border-indigo-100/50 backdrop-blur-sm flex flex-col md:flex-row items-center gap-6">
+             <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-indigo-600 border border-indigo-100 flex-shrink-0 animate-pulse">
+                <TrendingUp size={24} />
+             </div>
+             <div className="flex-1 text-center md:text-left space-y-1">
+                <p className="text-[10px] font-extrabold text-indigo-400 uppercase tracking-widest">AI Academic Trajectory Insight</p>
+                {isAnalyzingTrajectory ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 size={14} className="animate-spin text-indigo-400" />
+                    <p className="text-sm font-medium text-slate-400">Analyzing performance patterns...</p>
+                  </div>
+                ) : (
+                  <p className="text-sm font-bold text-slate-800 leading-relaxed italic">
+                    "{trajectory}"
+                  </p>
+                )}
+             </div>
+             {!isAnalyzingTrajectory && (
+               <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-indigo-100 shadow-sm text-[10px] font-bold text-indigo-600 uppercase">
+                  <Sparkles size={12} /> Predictive
+               </div>
+             )}
+          </div>
+        )}
       </div>
 
       {/* AI Report Modal */}

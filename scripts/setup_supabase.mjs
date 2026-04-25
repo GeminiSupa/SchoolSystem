@@ -51,6 +51,23 @@ async function setup() {
     console.log('Bucket "avatars" created successfully.');
   }
 
+  // 2. Create Assignments Bucket
+  console.log('2. Creating "assignments" storage bucket...');
+  const { data: assignData, error: assignError } = await supabase.storage.createBucket('assignments', {
+    public: true,
+    fileSizeLimit: 20971520 // 20MB
+  });
+
+  if (assignError) {
+    if (assignError.message.includes('already exists')) {
+      console.log('Bucket "assignments" already exists.');
+    } else {
+      console.error('Error creating bucket:', assignError.message);
+    }
+  } else {
+    console.log('Bucket "assignments" created successfully.');
+  }
+
   console.log('--- Setup Complete ---');
   console.log('Please run the SQL in supabase/migrations/20260402_fix_schema.sql in your Supabase SQL Editor.');
 }

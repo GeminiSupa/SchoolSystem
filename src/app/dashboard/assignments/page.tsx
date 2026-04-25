@@ -5,9 +5,10 @@ import { createClient } from '@/lib/supabase/client'
 import { 
   Plus, Clock, Users, BookOpen, Send, 
   MoreVertical, X, Loader2, Save, Calendar as CalendarIcon,
-  CheckCircle2, AlertCircle, Upload
+  CheckCircle2, AlertCircle, Upload, FileText, Paperclip
 } from 'lucide-react'
 import Link from 'next/link'
+import { FileUpload } from '@/components/ui/file-upload'
 
 export default function AssignmentsPage() {
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -27,8 +28,12 @@ export default function AssignmentsPage() {
     subject: '',
     due_date: '',
     description: '',
-    max_points: 100
+    max_points: 100,
+    attachment_url: '',
+    attachment_name: ''
   })
+
+  const [submissionFile, setSubmissionFile] = useState({ url: '', name: '' })
 
   const supabase = createClient()
 
@@ -147,7 +152,16 @@ export default function AssignmentsPage() {
       } else {
         setShowCreateModal(false)
         fetchInitialData()
-        setFormData({ title: '', class_id: classes[0]?.id || '', subject: classes[0]?.subject_name || '', due_date: '', description: '', max_points: 100 })
+        setFormData({ 
+          title: '', 
+          class_id: classes[0]?.id || '', 
+          subject: classes[0]?.subject_name || '', 
+          due_date: '', 
+          description: '', 
+          max_points: 100,
+          attachment_url: '',
+          attachment_name: ''
+        })
       }
     } catch (err) {
       console.error("Error creating assignment:", err)
@@ -320,6 +334,16 @@ export default function AssignmentsPage() {
                 </div>
                 
                 <div className="space-y-2">
+                  <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest ml-1">Handout / Reference Material (Optional)</label>
+                  <FileUpload 
+                    bucket="assignments"
+                    path="handouts"
+                    currentUrl={formData.attachment_url}
+                    onUploadComplete={(url, name) => setFormData({ ...formData, attachment_url: url, attachment_name: name || '' })}
+                  />
+                </div>
+                
+                <div className="space-y-2">
                   <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest ml-1">Task Instructions</label>
                   <textarea 
                     rows={4} 
@@ -359,17 +383,25 @@ export default function AssignmentsPage() {
               </div>
               <div className="space-y-6 relative z-10">
                  <div className="space-y-2">
-                   <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest ml-1">Your Submission / Link</label>
+                    <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest ml-1">Upload Your Work (PDF, Image, or Doc)</label>
+                    <FileUpload 
+                      bucket="assignments"
+                      path="submissions"
+                      onUploadComplete={(url, name) => setSubmissionFile({ url, name: name || '' })}
+                    />
+                 </div>
+                 <div className="space-y-2">
+                   <label className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest ml-1">Comments / Text Submission (Optional)</label>
                    <textarea 
-                     rows={4}
+                     rows={3}
                      value={submissionContent}
                      onChange={(e) => setSubmissionContent(e.target.value)}
                      className="w-full px-5 py-4 rounded-2xl border border-slate-100 glassmorphism focus:ring-2 focus:ring-slate-900 transition-all font-bold text-slate-800 placeholder:text-slate-300"
-                     placeholder="Paste your document link or write your submission here..."
+                     placeholder="Add any additional comments or write your submission here..."
                    />
                  </div>
                  <button 
-                   disabled={isSaving || !submissionContent.trim()}
+                   disabled={isSaving || (!submissionContent.trim() && !submissionFile.url)}
                    onClick={async () => {
                      setIsSaving(true)
                      const { data: { user } } = await supabase.auth.getUser()
@@ -377,19 +409,22 @@ export default function AssignmentsPage() {
                      // Helper: if parent is submitting, find their student id 
                      const { data: student } = await supabase.from('students').select('id').eq('parent_id', user?.id).limit(1).single()
                      const studentIdToSubmit = student ? student.id : user?.id
-
+ 
                      const { error } = await supabase.from('assignment_submissions').upsert({
                        assignment_id: selectedAssignment.id,
                        student_id: studentIdToSubmit,
                        content: submissionContent,
+                       attachment_url: submissionFile.url,
+                       attachment_name: submissionFile.name,
                        status: 'submitted'
                      }, { onConflict: 'assignment_id, student_id' })
-
+ 
                      if (error) alert(error.message)
                      else {
                        alert('Submitted successfully!')
                        setShowSubmitModal(false)
                        setSubmissionContent('')
+                       setSubmissionFile({ url: '', name: '' })
                      }
                      setIsSaving(false)
                    }}

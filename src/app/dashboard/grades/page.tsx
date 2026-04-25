@@ -6,9 +6,10 @@ import {
   Save, Search, Loader2, 
   GraduationCap, BookOpen, AlertCircle, CheckCircle2,
   FileText, BarChart3, Printer, Send, ShieldCheck,
-  XCircle, Clock
+  XCircle, Clock, Download
 } from 'lucide-react'
 import Link from 'next/link'
+import { downloadCSV } from '@/lib/utils/export'
 
 export default function GradebookPage() {
   const [students, setStudents] = useState<any[]>([])
@@ -357,16 +358,34 @@ export default function GradebookPage() {
           </div>
 
           {!isReadOnly && (
-            <div className="glassmorphism p-6 rounded-[2rem] border border-white/50 bg-white/40">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-white">
-                  <AlertCircle size={20} />
+            <div className="space-y-3">
+              <div className="glassmorphism p-6 rounded-[2rem] border border-white/50 bg-white/40">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-white">
+                    <AlertCircle size={20} />
+                  </div>
+                  <h4 className="font-bold text-slate-900 tracking-tight">Pending</h4>
                 </div>
-                <h4 className="font-bold text-slate-900 tracking-tight">Pending</h4>
+                <p className="text-sm text-slate-500 font-medium leading-relaxed">
+                  <span className="font-bold text-slate-900">{stats.pending}</span> students without marks in <span className="font-bold">{selectedSubject || 'this subject'}</span>.
+                </p>
               </div>
-              <p className="text-sm text-slate-500 font-medium leading-relaxed">
-                <span className="font-bold text-slate-900">{stats.pending}</span> students without marks in <span className="font-bold">{selectedSubject || 'this subject'}</span>.
-              </p>
+
+              <button 
+                onClick={() => {
+                  const exportData = students.map(s => ({
+                    Name: s.full_name,
+                    Roll_No: s.roll_no,
+                    Subject: selectedSubject,
+                    Marks: marks[s.id] || 0,
+                    Comments: comments[s.id] || ''
+                  }))
+                  downloadCSV(exportData, `grades_${selectedSubject}_${selectedClassId}`)
+                }}
+                className="w-full bg-white text-slate-700 px-6 py-3.5 rounded-2xl font-bold flex items-center justify-center gap-2 border border-slate-200 hover:bg-slate-50 transition-all shadow-sm mb-3"
+              >
+                <Download size={18} /> Export Gradebook
+              </button>
             </div>
           )}
 

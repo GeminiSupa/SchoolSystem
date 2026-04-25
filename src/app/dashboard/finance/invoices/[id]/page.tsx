@@ -5,14 +5,19 @@ import { createClient } from '@/lib/supabase/client'
 import { useParams, useRouter } from 'next/navigation'
 import { 
   Printer, Download, ShieldCheck, Mail, Phone, 
-  MapPin, Loader2, ArrowLeft, CreditCard 
+  MapPin, Loader2, ArrowLeft, CreditCard, Wand2,
+  Sparkles, X, Clipboard, Share2
 } from 'lucide-react'
+import { generateInvoicePDF } from '@/lib/utils/pdf-gen'
 
 export default function InvoiceDetail() {
   const params = useParams()
   const router = useRouter()
   const [invoice, setInvoice] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isGeneratingReminder, setIsGeneratingReminder] = useState(false)
+  const [aiReminder, setAiReminder] = useState<string | null>(null)
+  const [showReminderModal, setShowReminderModal] = useState(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -33,6 +38,30 @@ export default function InvoiceDetail() {
       setInvoice(data)
     }
     setIsLoading(false)
+  }
+
+  const handleGenerateReminder = async () => {
+    setIsGeneratingReminder(true)
+    try {
+      const res = await fetch('/api/ai/fee-reminder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          studentName: invoice.students?.full_name,
+          amount: invoice.amount,
+          dueDate: new Date(invoice.due_date).toLocaleDateString(),
+          schoolName: "POS Main Campus"
+        })
+      })
+      const data = await res.json()
+      setAiReminder(data.reminder)
+      setShowReminderModal(true)
+    } catch (err) {
+      console.error(err)
+      alert("Failed to generate AI reminder.")
+    } finally {
+      setIsGeneratingReminder(false)
+    }
   }
 
   if (isLoading) return (
@@ -138,17 +167,31 @@ export default function InvoiceDetail() {
                       <p className="text-xs text-slate-400 mt-1">Please pay before the due date to avoid late fees.</p>
                    </div>
                 </div>
-                <div className="flex gap-3">
-                   <button 
-                    onClick={() => window.print()}
-                    className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-bold transition-all flex items-center gap-2"
-                   >
-                      <Printer size={16} /> Print
-                   </button>
-                   <button className="px-6 py-3 bg-white text-slate-900 rounded-xl text-sm font-bold transition-all shadow-xl shadow-black/20 flex items-center gap-2">
-                      <ShieldCheck size={16} /> Pay Securely
-                   </button>
-                </div>
+                 <div className="flex gap-3">
+                    <button 
+                     onClick={handleGenerateReminder}
+                     disabled={isGeneratingReminder}
+                     className="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 rounded-xl text-sm font-bold transition-all flex items-center gap-2 text-white shadow-lg shadow-indigo-500/20 disabled:opacity-50"
+                    >
+                       {isGeneratingReminder ? <Loader2 size={16} className="animate-spin" /> : <Wand2 size={16} />}
+                       {isGeneratingReminder ? 'Drafting...' : 'AI Reminder'}
+                    </button>
+                    <button 
+                     onClick={() => window.print()}
+                     className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-bold transition-all flex items-center gap-2"
+                    >
+                       <Printer size={16} /> Print
+                    </button>
+                    <button 
+                     onClick={() => generateInvoicePDF(invoice)}
+                     className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-bold transition-all flex items-center gap-2 text-white"
+                    >
+                       <Download size={16} /> Download PDF
+                    </button>
+                    <button className="px-6 py-3 bg-white text-slate-900 rounded-xl text-sm font-bold transition-all shadow-xl shadow-black/20 flex items-center gap-2">
+                       <ShieldCheck size={16} /> Pay Securely
+                    </button>
+                 </div>
              </div>
              
              <p className="text-center text-[10px] text-slate-400 font-bold uppercase tracking-widest">
@@ -157,6 +200,52 @@ export default function InvoiceDetail() {
           </div>
         </div>
       </div>
+
+      {/* AI Reminder Modal */}
+      {showReminderModal && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[200] flex items-center justify-center p-6 animate-in fade-in duration-300">
+           <div className="w-full max-w-xl bg-white rounded-[3rem] shadow-2xl relative overflow-hidden flex flex-col">
+              <div className="h-2 bg-gradient-to-r from-indigo-500 to-purple-500" />
+              <div className="p-10 space-y-8">
+                 <div className="flex justify-between items-start">
+                    <div className="flex items-center gap-4">
+                       <div className="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 border border-indigo-100">
+                          <Sparkles size={24} />
+                       </div>
+                       <div>
+                          <h2 className="text-xl font-bold text-slate-900">AI Reminder Draft</h2>
+                          <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Polite • Personalized • Effective</p>
+                       </div>
+                    </div>
+                    <button onClick={() => setShowReminderModal(false)} className="p-2 bg-slate-50 rounded-xl text-slate-400 hover:text-slate-900 transition-all">
+                       <X size={20} />
+                    </button>
+                 </div>
+
+                 <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                    <p className="text-sm leading-relaxed text-slate-700 italic">
+                       "{aiReminder}"
+                    </p>
+                 </div>
+
+                 <div className="flex gap-4">
+                    <button 
+                      onClick={() => {
+                        navigator.clipboard.writeText(aiReminder || '')
+                        alert('Copied to clipboard!')
+                      }}
+                      className="flex-1 bg-slate-900 text-white px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shadow-lg"
+                    >
+                       <Clipboard size={18} /> Copy
+                    </button>
+                    <button className="flex-1 bg-white text-slate-900 px-6 py-3 rounded-xl font-bold flex items-center justify-center gap-2 border border-slate-200 hover:bg-slate-50 transition-all">
+                       <Share2 size={18} /> WhatsApp
+                    </button>
+                 </div>
+              </div>
+           </div>
+        </div>
+      )}
     </div>
   )
 }
