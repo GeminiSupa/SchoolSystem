@@ -19,9 +19,13 @@ export default async function LoginPage({
     <div className="flex min-h-screen items-center justify-center p-4 bg-slate-50">
       <div className="w-full max-w-md glassmorphism p-8 rounded-[2rem] border border-white/50">
         <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center text-white font-display font-bold text-xl mx-auto mb-4">P</div>
-          <h1 className="text-3xl font-display font-bold">POS</h1>
-          <p className="text-slate-500 mt-2">Modern School Management</p>
+          <img 
+            src="/logo.png" 
+            alt="AIM HIGH Logo" 
+            className="h-16 w-auto mx-auto mb-4 object-contain"
+          />
+          <h1 className="text-3xl font-display font-bold">AIM HIGH</h1>
+          <p className="text-slate-500 mt-2 italic font-medium">School Management System</p>
         </div>
 
         {errorMsg && (
