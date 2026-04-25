@@ -59,8 +59,8 @@ export default function InvoiceDetail() {
           <div className="flex flex-col md:flex-row justify-between items-start gap-10">
             <div className="space-y-6">
               <div className="flex items-center gap-3">
-                 <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-bold text-xl">S</div>
-                 <h1 className="text-3xl font-display font-extrabold tracking-tighter text-slate-900 italic">EduOS</h1>
+                 <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-bold text-xl">P</div>
+                 <h1 className="text-3xl font-display font-extrabold tracking-tighter text-slate-900 italic">POS</h1>
               </div>
               <div className="space-y-1 text-sm font-medium text-slate-500">
                 <p className="flex items-center gap-2"><MapPin size={14} /> Main Campus, Education City</p>
@@ -71,8 +71,8 @@ export default function InvoiceDetail() {
             
             <div className="text-left md:text-right space-y-2">
                <h2 className="text-5xl font-display font-bold text-slate-900 tracking-tighter uppercase opacity-10">Invoice</h2>
-               <p className="font-bold text-slate-500 tracking-widest uppercase text-xs">#INV-{invoice.id.slice(0, 8)}</p>
-               <div className={`inline-block px-4 py-1.5 rounded-full text-[10px] font-extrabold uppercase tracking-widest border mt-4 ${
+               <p className="font-bold text-slate-500 tracking-widest uppercase text-[10px]">#INV-{invoice.id.slice(0, 8)}</p>
+               <div className={`inline-block px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-widest border mt-4 ${
                  invoice.status === 'paid' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'
                }`}>
                   {invoice.status}
@@ -82,7 +82,7 @@ export default function InvoiceDetail() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12 border-t border-slate-100">
              <div className="space-y-4">
-                <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Bill To</p>
+                <p className="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Bill To</p>
                 <div className="space-y-1">
                    <p className="text-xl font-bold text-slate-900 tracking-tight">{invoice.students?.full_name}</p>
                    <p className="text-sm font-bold text-slate-500">Grade: {invoice.students?.grade}-{invoice.students?.section}</p>
@@ -91,7 +91,7 @@ export default function InvoiceDetail() {
              </div>
              
              <div className="space-y-4 md:text-right">
-                <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Date Info</p>
+                <p className="text-xs font-extrabold text-slate-400 uppercase tracking-widest">Date Info</p>
                 <div className="space-y-1">
                    <p className="text-sm font-bold text-slate-500">Issued: {new Date(invoice.created_at).toLocaleDateString()}</p>
                    <p className={`text-sm font-extrabold ${invoice.status === 'overdue' ? 'text-rose-500' : 'text-slate-900'}`}>

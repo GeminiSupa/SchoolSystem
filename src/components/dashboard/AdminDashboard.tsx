@@ -46,12 +46,12 @@ export default function AdminDashboard({ stats, alerts, isLoading, isAnalyzing }
                <div className={`w-10 h-10 rounded-xl ${stat.bg} ${stat.color} flex items-center justify-center`}>
                   <stat.icon size={20} />
                </div>
-               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${stat.trend.startsWith('+') ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'}`}>
+               <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${stat.trend.startsWith('+') ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-400'}`}>
                   {stat.trend}
                </span>
             </div>
             <p className="text-3xl font-display font-bold text-slate-900 tracking-tighter">{stat.value}</p>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{stat.label}</p>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -76,7 +76,7 @@ export default function AdminDashboard({ stats, alerts, isLoading, isAnalyzing }
             {isLoading ? (
                <div className="flex flex-col items-center justify-center h-full py-10 space-y-4">
                   <Loader2 className="animate-spin text-slate-200" size={48} />
-                  <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Waking up the Sentinel...</p>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Waking up the Sentinel...</p>
                </div>
             ) : alerts.length > 0 ? alerts.map((alert, idx) => (
               <div key={idx} className="flex flex-col md:flex-row items-start md:items-center gap-4 p-5 rounded-3xl border border-slate-50 hover:border-slate-200 hover:bg-white/50 transition-all group">
@@ -88,7 +88,7 @@ export default function AdminDashboard({ stats, alerts, isLoading, isAnalyzing }
                 <div className="flex-1 space-y-1">
                    <div className="flex items-center gap-2">
                       <p className="font-bold text-slate-900">{alert.name}</p>
-                      <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-tighter ${
+                      <span className={`text-xs font-extrabold px-2 py-0.5 rounded-full uppercase tracking-tighter ${
                         alert.riskLevel === 'High' ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'
                       }`}>
                         {alert.riskLevel} RISK
@@ -109,7 +109,7 @@ export default function AdminDashboard({ stats, alerts, isLoading, isAnalyzing }
           </div>
           
           <div className="p-6 bg-indigo-50/30 border-t border-indigo-50/50 text-center">
-             <button className="text-indigo-600 font-bold text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 mx-auto hover:gap-3 transition-all">
+             <button className="text-indigo-600 font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-2 mx-auto hover:gap-3 transition-all">
                 Generate Full Academic Audit <Sparkles size={12} />
              </button>
           </div>
@@ -121,15 +121,15 @@ export default function AdminDashboard({ stats, alerts, isLoading, isAnalyzing }
               <h4 className="font-bold text-xl tracking-tight text-slate-900 mb-6 italic">School Intelligence</h4>
               <div className="space-y-6">
                 {[
-                  { label: "Faculty Meeting", time: "2:00 PM Today", color: "indigo" },
-                  { label: "New Admission Drive", time: "Starts Tomorrow", color: "emerald" },
-                  { label: "Grade Reporting", time: "Ends in 2 days", color: "rose" }
+                  { label: "Faculty Meeting", time: "2:00 PM Today", color: "bg-indigo-500" },
+                  { label: "New Admission Drive", time: "Starts Tomorrow", color: "bg-emerald-500" },
+                  { label: "Grade Reporting", time: "Ends in 2 days", color: "bg-rose-500" }
                 ].map((item, i) => (
                   <div key={i} className="flex gap-4 items-start">
-                    <div className={`w-1 h-10 rounded-full bg-${item.color}-500 shadow-sm`} />
+                    <div className={`w-1 h-10 rounded-full ${item.color} shadow-sm`} />
                     <div>
                       <p className="font-bold text-slate-800 text-sm leading-tight">{item.label}</p>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">{item.time}</p>
+                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">{item.time}</p>
                     </div>
                   </div>
                 ))}

@@ -152,12 +152,12 @@ export default function TeacherDashboard({ profile, stats }: TeacherDashboardPro
               <h4 className="font-bold text-lg text-slate-900 mb-4 tracking-tight">Recent Leave</h4>
               <div className="flex items-center justify-between p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
                  <div>
-                    <p className="text-xs font-extra-bold text-emerald-800 uppercase tracking-widest">Sick Leave</p>
+                    <p className="text-xs font-extrabold text-emerald-800 uppercase tracking-widest">Sick Leave</p>
                     <p className="text-sm font-bold text-emerald-900">Approved</p>
                  </div>
                  <span className="text-xs text-emerald-600 font-bold">2 Days</span>
               </div>
-              <Link href="/dashboard/leaves" className="w-full mt-4 py-3 rounded-xl border border-slate-100 font-bold text-slate-400 text-[10px] uppercase tracking-widest hover:text-slate-900 transition-all flex items-center justify-center gap-2">
+              <Link href="/dashboard/leaves" className="w-full mt-4 py-3 rounded-xl border border-slate-100 font-bold text-slate-400 text-xs uppercase tracking-widest hover:text-slate-900 transition-all flex items-center justify-center gap-2">
                  Apply for Leave <ArrowRight size={12} />
               </Link>
            </div>

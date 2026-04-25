@@ -6,15 +6,15 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-white">
       {/* Navbar */}
-      <nav className="fixed top-0 w-full z-50 glassmorphism border-b border-slate-100 px-6 py-4 flex justify-between items-center">
+      <nav className="fixed top-0 w-full z-50 glassmorphism border-b border-slate-100 px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center">
-            <span className="text-white font-display font-bold text-xl">P</span>
+          <div className="w-9 h-9 md:w-10 md:h-10 bg-slate-900 rounded-xl flex items-center justify-center">
+            <span className="text-white font-display font-bold text-lg md:text-xl">P</span>
           </div>
-          <span className="text-2xl font-display font-bold tracking-tight">POS</span>
+          <span className="text-xl md:text-2xl font-display font-bold tracking-tight">POS</span>
         </div>
-        <div className="flex items-center gap-4">
-          <Link href="/login" className="md:hidden text-sm font-bold text-slate-900 border border-slate-200 px-4 py-2 rounded-xl">
+        <div className="flex items-center gap-2 md:gap-4">
+          <Link href="/login" className="md:hidden text-[10px] uppercase tracking-widest font-bold text-slate-900 border border-slate-200 px-3 py-2 rounded-xl bg-white/50">
             Login
           </Link>
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
@@ -36,10 +36,10 @@ export default function LandingPage() {
               <Zap size={14} className="text-amber-500" />
               <span>Next-Generation School ERP</span>
             </div>
-            <h1 className="text-5xl lg:text-7xl font-display font-bold leading-tight tracking-tight text-slate-900">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-display font-bold leading-tight tracking-tight text-slate-900">
               Empower Your Institution with <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">Smart Management</span>
             </h1>
-            <p className="text-xl text-slate-500 max-w-xl leading-relaxed">
+            <p className="text-lg md:text-xl text-slate-500 max-w-xl leading-relaxed">
               Simplify administrative tasks, improve communication, and ensure data security with our unified school management complex. Focus on quality education while we automate the rest.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -47,14 +47,21 @@ export default function LandingPage() {
                 Get Started Now
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </Link>
-              <a href="https://wa.link/souve5" target="_blank" rel="noopener noreferrer" className="px-8 py-4 glassmorphism rounded-2xl font-bold text-slate-900 hover:bg-slate-900 hover:text-white transition-all text-center shadow-sm hover:shadow-xl">
+              <a href="https://wa.link/souve5" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-slate-50 border border-slate-200 rounded-2xl font-bold text-slate-900 hover:bg-slate-900 hover:text-white transition-all text-center shadow-sm hover:shadow-xl">
                 Request a Demo
               </a>
             </div>
             <div className="flex items-center gap-6 pt-4 justify-center lg:justify-start">
               <div className="flex -space-x-3">
-                {[1,2,3,4].map(i => (
-                  <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-200" />
+                {[
+                  { bg: 'bg-indigo-500', icon: 'A' },
+                  { bg: 'bg-emerald-500', icon: 'B' },
+                  { bg: 'bg-violet-500', icon: 'C' },
+                  { bg: 'bg-amber-500', icon: 'D' }
+                ].map((school, i) => (
+                  <div key={i} className={`w-10 h-10 rounded-full border-2 border-white ${school.bg} flex items-center justify-center text-[10px] font-bold text-white shadow-sm`}>
+                    {school.icon}
+                  </div>
                 ))}
               </div>
               <p className="text-sm text-slate-500 font-medium">Joined by <span className="text-slate-900 font-bold">500+</span> elite institutions</p>
@@ -83,12 +90,12 @@ export default function LandingPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { icon: <Users />, title: "Student Management", desc: "Centralized platform for academic history, personal details, and real-time fee status." },
-              { icon: <Calendar />, title: "Smart Scheduling", desc: "Conflict-free timetables for classes and examinations generated in seconds." },
-              { icon: <CreditCard />, title: "Online Fee Collection", desc: "Secure digital payments with automated receipt generation and overdue alerts." },
-              { icon: <ClipboardCheck />, title: "Attendance Automation", desc: "Electronic tracking for students and staff with instant background reporting." },
-              { icon: <GraduationCap />, title: "Exam Management", desc: "Automated exam setup, admit card generation, and instant results publishing." },
-              { icon: <ShieldCheck />, title: "Data Security", desc: "Enterprise-grade protection for sensitive financial and academic records." }
+              { icon: <Users size={28} />, title: "Student Management", desc: "Centralized platform for academic history, personal details, and real-time fee status." },
+              { icon: <Calendar size={28} />, title: "Smart Scheduling", desc: "Conflict-free timetables for classes and examinations generated in seconds." },
+              { icon: <CreditCard size={28} />, title: "Online Fee Collection", desc: "Secure digital payments with automated receipt generation and overdue alerts." },
+              { icon: <ClipboardCheck size={28} />, title: "Attendance Automation", desc: "Electronic tracking for students and staff with instant background reporting." },
+              { icon: <GraduationCap size={28} />, title: "Exam Management", desc: "Automated exam setup, admit card generation, and instant results publishing." },
+              { icon: <ShieldCheck size={28} />, title: "Data Security", desc: "Enterprise-grade protection for sensitive financial and academic records." }
             ].map((feature, i) => (
               <div key={i} className="glassmorphism p-8 rounded-3xl group hover:bg-slate-900 transition-all duration-300">
                 <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-900 mb-6 group-hover:bg-white/10 group-hover:text-white transition-colors">
@@ -173,14 +180,14 @@ export default function LandingPage() {
             <p className="text-xl text-slate-400 leading-relaxed">
               Our bilingual mobile app ensures that parents are always in the loop. Real-time updates on attendance, exam results, and fee payments give them the peace of mind they deserve.
             </p>
-            <div className="flex gap-4">
-              <div className="px-6 py-3 bg-white/10 border border-white/20 rounded-2xl text-white font-medium flex items-center gap-3">
-                <span className="text-2xl">Urdu</span>
-                <span className="text-slate-400">Supported</span>
+            <div className="flex flex-wrap gap-4">
+              <div className="px-6 py-3 glassmorphism-dark rounded-2xl text-white font-medium flex items-center gap-3">
+                <span className="text-2xl font-bold font-display text-indigo-300">Urdu</span>
+                <span className="text-slate-300 text-sm font-bold uppercase tracking-widest">Supported</span>
               </div>
-              <div className="px-6 py-3 bg-white/10 border border-white/20 rounded-2xl text-white font-medium flex items-center gap-3">
-                <span className="text-2xl">English</span>
-                <span className="text-slate-400">Supported</span>
+              <div className="px-6 py-3 glassmorphism-dark rounded-2xl text-white font-medium flex items-center gap-3">
+                <span className="text-2xl font-bold font-display text-violet-300">English</span>
+                <span className="text-slate-300 text-sm font-bold uppercase tracking-widest">Supported</span>
               </div>
             </div>
           </div>
