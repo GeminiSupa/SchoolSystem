@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { useNotificationStore } from "@/store/useNotificationStore"
 import { 
@@ -111,9 +112,11 @@ export default function DashboardLayout({
       {/* Sidebar (Desktop) */}
       <aside className="w-64 glassmorphism border-r border-slate-200 m-3 rounded-3xl p-6 hidden md:flex flex-col overflow-y-auto custom-scrollbar">
         <div className="flex items-center gap-3 mb-10 px-2 justify-center">
-          <img 
+          <Image 
             src="/logo.png" 
             alt="AIM HIGH Logo" 
+            width={180}
+            height={60}
             className="h-16 w-auto object-contain"
           />
         </div>

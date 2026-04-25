@@ -144,9 +144,9 @@ export default function StudentPortfolioPage({ params }: { params: { id: string 
             </button>
           </div>
         </div>
-        </div>
+      </div>
 
-        {/* AI Trajectory Insights */}
+      {/* AI Trajectory Insights */}
         {(trajectory || isAnalyzingTrajectory) && (
           <div className="mx-6 md:mx-12 mt-6 p-6 rounded-[2rem] bg-gradient-to-br from-indigo-50/50 to-purple-50/50 border border-indigo-100/50 backdrop-blur-sm flex flex-col md:flex-row items-center gap-6">
              <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-indigo-600 border border-indigo-100 flex-shrink-0 animate-pulse">
@@ -172,7 +172,6 @@ export default function StudentPortfolioPage({ params }: { params: { id: string 
              )}
           </div>
         )}
-      </div>
 
       {/* AI Report Modal */}
       {showAIModal && (

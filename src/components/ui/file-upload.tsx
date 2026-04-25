@@ -65,7 +65,7 @@ export function FileUpload({ bucket, path, onUploadComplete, currentUrl, accept 
     }
   }
 
-  const isImage = isImageValue(preview || currentUrl)
+  const isImage = isImageValue(preview || currentUrl || null)
 
   return (
     <div className="space-y-4">
